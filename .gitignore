@@ -1,0 +1,9 @@
+*.log
+log.txt
+npm-debug.log*
+
+/.idea
+/.vscode
+/.vs
+/dist
+/node_modules
