@@ -3,19 +3,13 @@ let server = require('http').createServer(app);
 let io = require('socket.io')(server);
 let socketioJwt = require('socketio-jwt');
 var myEnv = require('dotenv').config({ path: '.env' });
-// var mysql = require('mariadb')
-const mariadb = require('mariadb');
+const typeorm = require("typeorm"); // import * as typeorm from "typeorm";
+const UserChat = require("./models/UserChat").UserChat
+
 
 
 let userObj = { id: null, name: null, }
-    // mysql conn data
-const pool = mariadb.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'medical'
-})
-
+    // const db =
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello world</h1>');
@@ -47,49 +41,44 @@ io.on('connection', (socket) => {
     socket.on('send-message', (message) => {
         let createdAt = new Date("2020-05-19 12:48:56")
         io.emit('message', { msg: message.text, user: socket.username, createdAt: createdAt });
-        return asyncFunction(userObj, message.text);
-    });
-    //end mysql conn
+        typeorm.createConnection({
+            type: "mysql",
+            host: "localhost",
+            port: 3306,
+            username: "root",
+            password: "",
+            database: "medical",
+            synchronize: true,
+            logging: false,
+            entities: [
+                require("./entity/UserChatSchema"),
+            ]
+        }).then(function(connection) {
+            let userChat = new UserChat();
+            userChat.message = message.text;
+            userChat.from_user_id = userObj.id;
+            userChat.to_user_id = 2;
+            return connection
+                .manager
+                .save([userChat])
+                // let userChatRepository = connection.getRepository(UserChat);
+                // userChatRepository.save(userChat)
+                .then(data => {
+                    console.log("message has been saved: ", data);
+                    //         console.log("Now lets load all message: ");
 
+                    // return userChatRepository.find();
+                })
+                // .catch(error => {
+                //     console.log('error: ', error)
+                // })
+        }); //end of conn fun
+
+    }); // socket response
 });
 
-function asyncFunction(userObj, message) {
-    let conn;
-    try {
-        conn = pool.getConnection();
-        const res = conn.query("INSERT INTO users_chats('from_user_id', 'to_user_id', 'message') value (?, ?, ?)", [userObj.id, userObj.id, message]);
-        console.log('insert: ', res);
-
-    } catch (err) {
-        throw err;
-    } finally {
-        if (conn) return conn.end();
-    }
-}
 var port = process.env.PORT || myEnv.PORT;
 
 server.listen(port, function() {
     console.log('listening in http://localhost:' + port);
 });
-
-/*
-When authenticated, send back userid + email over socket
-*/
-// io.on('authenticated', function(socket) {
-
-//     socket.username = name;
-//     io.emit('users-changed', { user: name, event: 'joined' });
-//     console.log(socket.decoded_token);
-//     socket.emit('user-id', socket.decoded_token.id);
-//     socket.emit('name', socket.decoded_token.name);
-
-
-//     // socket.on('public-my-message', function (data) {
-//     // socket.emit('receive-my-message', data.msg);
-//     socket.on('send-message', (message) => {
-//         io.emit('message', { msg: message.text, user: socket.username, createdAt: new Date() });
-//     });
-//     // });
-
-
-// });

@@ -1,5 +1,5 @@
 const EntitySchema = require("typeorm").EntitySchema; // import {EntitySchema} from "typeorm";
-const UsersChat = require("../models/UsersChat").UsersChat;
+const UsersChat = require("../models/UserChat").UsersChat;
 
 module.exports = new EntitySchema({
     name: "user_chat",
