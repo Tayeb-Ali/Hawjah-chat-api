@@ -1,26 +1,27 @@
 {
-  "name": "vitalchat",
-  "version": "1.1.1",
-  "description": "Api for vitel helth app",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "chat",
-    "ionic",
-    "angular"
-  ],
-  "author": "Elteyab Hassan",
-  "license": "BSD-2-Clause",
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "mysql": "^2.18.1",
-    "socket.io": "^2.3.0",
-    "socketio-jwt": "^4.5.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.4"
-  }
+    "name": "vitalchat",
+    "version": "1.1.1",
+    "description": "Api for vitel helth app",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "chat",
+        "ionic",
+        "angular"
+    ],
+    "author": "Elteyab Hassan",
+    "license": "BSD-2-Clause",
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "mysql": "^2.18.1",
+        "socket.io": "^2.3.0",
+        "socketio-jwt": "^4.5.0",
+        "typeorm": "^0.2.25"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    }
 }
